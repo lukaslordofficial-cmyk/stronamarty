@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { MENU, type MenuId } from '../menu'
 import { Logo } from './Logo'
+import { TourShapes } from './TourShapes'
 
 type Props = {
   ready: boolean
@@ -17,6 +18,7 @@ export const TourScreen = forwardRef<HTMLElement, Props>(function TourScreen(
     <section ref={ref} className="tour" id="top">
       <div className="tour-stage tour-cover" aria-hidden="true">
         <img className="tour-bg" src="/tour-bg.webp" alt="" width={1920} height={1064} decoding="async" />
+        <TourShapes />
       </div>
 
       <div className="tour-stage tour-content">

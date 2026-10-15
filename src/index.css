@@ -132,6 +132,19 @@ main {
   height: 100%;
 }
 
+.tour-shapes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  fill: none;
+  stroke: #1f1f1f;
+  stroke-width: 2.55;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 12;
+}
+
 .logo {
   display: block;
   line-height: 0;
@@ -337,7 +350,7 @@ main {
 }
 
 .pill-uxui {
-  left: 29.948cqw;
+  left: 31.854cqw;
 }
 
 .pill-print {
@@ -345,7 +358,7 @@ main {
 }
 
 .pill-about {
-  left: 57.812cqw;
+  left: 55.906cqw;
 }
 
 /* Entrance after the intro */
@@ -614,7 +627,7 @@ body.is-ready .pill-about {
     position: relative;
     inset: auto;
     display: flex;
-    gap: 3cqw;
+    gap: 1.8cqw;
     margin-top: 9cqw;
   }
 
