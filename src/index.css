@@ -142,6 +142,10 @@ main {
   position: relative;
 }
 
+.frame-tile {
+  position: relative;
+}
+
 .frame-logo {
   position: absolute;
 }

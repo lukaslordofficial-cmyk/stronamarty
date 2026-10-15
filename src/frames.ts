@@ -1,3 +1,7 @@
+import mobileCrops from './mobile-crops.json'
+
+export type Crop = { x: number; y: number; w: number; h: number; rotate?: number }
+
 export type Frame = {
   id?: string
   name: string
@@ -7,11 +11,21 @@ export type Frame = {
   alt: string
   logo?: { left: number; top: number; width: number }
   pen?: boolean
+  mobile?: Crop[]
+}
+
+const MOBILE_SIZES = [750, 1170, 1600]
+
+export function mobileSizes(crop: Crop) {
+  const width = crop.rotate ? crop.h : crop.w
+  const sizes = MOBILE_SIZES.filter((size) => size < width)
+  if (sizes.length < MOBILE_SIZES.length) sizes.push(Math.min(width, 1600))
+  return [...new Set(sizes)]
 }
 
 const FULL = [1280, 1920, 2560, 3200]
 
-export const frames: Frame[] = [
+const designed: Frame[] = [
   {
     id: 'about',
     name: '02',
@@ -55,3 +69,7 @@ export const frames: Frame[] = [
     alt: 'Teacher App shown on two laptops over a purple gradient.',
   },
 ]
+
+const crops: Record<string, Crop[]> = mobileCrops
+
+export const frames: Frame[] = designed.map((frame) => ({ ...frame, mobile: crops[frame.name] }))

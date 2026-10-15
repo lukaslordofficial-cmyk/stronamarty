@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
+import type { Crop } from '../frames'
 
-const VIEW = { width: 5036, height: 2673 }
+const VIEW: Crop = { x: 0, y: 0, w: 5036, h: 2673 }
+export const PEN_AREA: Crop = { x: 1790, y: 515, w: 560, h: 2155 }
 const ANCHOR = { x: 2152.5, y: 704.5 }
 const BODY = { x: 1996, y: 521, width: 155, height: 177 }
 const TRACK =
@@ -10,7 +12,7 @@ const DURATION = 1500
 
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2) * 0.35 + t * 0.65
 
-export function PenNib({ play, delay = 0 }: { play: boolean; delay?: number }) {
+export function PenNib({ play, delay = 0, view = VIEW }: { play: boolean; delay?: number; view?: Crop }) {
   const track = useRef<SVGPathElement>(null)
   const gap = useRef<SVGPathElement>(null)
   const pen = useRef<SVGGElement>(null)
@@ -56,7 +58,7 @@ export function PenNib({ play, delay = 0 }: { play: boolean; delay?: number }) {
   }, [play, delay])
 
   return (
-    <svg className="frame-pen" viewBox={`0 0 ${VIEW.width} ${VIEW.height}`} aria-hidden="true">
+    <svg className="frame-pen" viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`} aria-hidden="true">
       <path ref={track} d={TRACK} fill="none" stroke="none" />
       <path ref={gap} d={GAP} className="frame-pen-line" />
       <g ref={pen}>

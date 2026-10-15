@@ -1,13 +1,47 @@
-import { useEffect, useRef, useState } from 'react'
-import type { Frame } from '../frames'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { mobileSizes, type Crop, type Frame } from '../frames'
 import { Logo } from './Logo'
-import { PenNib } from './PenNib'
+import { PEN_AREA, PenNib } from './PenNib'
 
-export function FrameScreen({ id, name, width, height, sizes, alt, logo, pen, eager }: Frame & { eager?: boolean }) {
-  const fallback = sizes.includes(1920) ? 1920 : sizes[sizes.length - 1]
-  const ref = useRef<HTMLElement>(null)
+const PHONE = '(max-aspect-ratio: 4/5)'
+const LOGO_RATIO = 444 / 1002
+
+function subscribe(onChange: () => void) {
+  const query = window.matchMedia(PHONE)
+  query.addEventListener('change', onChange)
+  return () => query.removeEventListener('change', onChange)
+}
+
+function usePhone() {
+  return useSyncExternalStore(subscribe, () => window.matchMedia(PHONE).matches)
+}
+
+const contains = (crop: Crop, box: Crop) =>
+  !crop.rotate && box.x >= crop.x && box.y >= crop.y && box.x + box.w <= crop.x + crop.w && box.y + box.h <= crop.y + crop.h
+
+export function FrameScreen(props: Frame & { eager?: boolean }) {
+  const { id, name, width, height, mobile } = props
+  const phone = usePhone()
+
+  return (
+    <section id={id} className="frame">
+      {phone && mobile ? (
+        mobile.map((crop, index) => <Tile key={`${name}-${index}`} frame={props} crop={crop} index={index} />)
+      ) : (
+        <Tile frame={props} crop={{ x: 0, y: 0, w: width, h: height }} />
+      )}
+    </section>
+  )
+}
+
+function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop: Crop; index?: number }) {
+  const { name, width, height, sizes, alt, logo, pen, eager } = frame
+  const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
-  const animated = Boolean(logo || pen)
+  const logoBox = logo && { x: logo.left, y: logo.top, w: logo.width, h: logo.width * LOGO_RATIO }
+  const showLogo = Boolean(logoBox && contains(crop, logoBox))
+  const showPen = Boolean(pen && contains(crop, PEN_AREA))
+  const animated = showLogo || showPen
 
   useEffect(() => {
     const node = ref.current
@@ -21,31 +55,39 @@ export function FrameScreen({ id, name, width, height, sizes, alt, logo, pen, ea
     return () => observer.disconnect()
   }, [animated])
 
+  const desktop = index === undefined
+  const files = desktop
+    ? sizes.map((size) => [`/screens/${name}-${size}.webp`, size] as const)
+    : mobileSizes(crop).map((size) => [`/screens/m${name}-${index}-${size}.webp`, size] as const)
+  const fallback = desktop ? files.find(([, size]) => size === 1920) ?? files[files.length - 1] : files[1] ?? files[0]
+  const tileWidth = crop.rotate ? crop.h : crop.w
+  const tileHeight = crop.rotate ? crop.w : crop.h
+
   return (
-    <section ref={ref} id={id} className="frame">
+    <div ref={ref} className="frame-tile">
       <img
-        src={`/screens/${name}-${fallback}.webp`}
-        srcSet={sizes.map((size) => `/screens/${name}-${size}.webp ${size}w`).join(', ')}
+        src={fallback?.[0]}
+        srcSet={files.map(([src, size]) => `${src} ${size}w`).join(', ')}
         sizes="100vw"
-        width={width}
-        height={height}
-        alt={alt}
-        loading={eager ? 'eager' : 'lazy'}
+        width={desktop ? width : tileWidth}
+        height={desktop ? height : tileHeight}
+        alt={desktop || index === 0 ? alt : ''}
+        loading={eager && (desktop || index === 0) ? 'eager' : 'lazy'}
         decoding="async"
       />
-      {logo && (
+      {showLogo && logo && (
         <Logo
           className="frame-logo"
           play={inView}
           delay={0.15}
           style={{
-            left: `${(logo.left / width) * 100}%`,
-            top: `${(logo.top / height) * 100}%`,
-            width: `${(logo.width / width) * 100}%`,
+            left: `${((logo.left - crop.x) / crop.w) * 100}%`,
+            top: `${((logo.top - crop.y) / crop.h) * 100}%`,
+            width: `${(logo.width / crop.w) * 100}%`,
           }}
         />
       )}
-      {pen && <PenNib play={inView} delay={0.3} />}
-    </section>
+      {showPen && <PenNib play={inView} delay={0.3} view={crop} />}
+    </div>
   )
 }
