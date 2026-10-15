@@ -57,15 +57,15 @@ function ambient(mote: Mote, w: number, h: number, initial: boolean) {
 
 function shed(x: number, y: number, radius: number): Mote {
   const angle = Math.random() * Math.PI * 2
-  const speed = (12 + Math.random() * 42) * TEMPO
-  const offset = radius * (0.4 + Math.random() * 0.9)
+  const speed = (30 + Math.random() * 110) * TEMPO
+  const offset = radius * (1 + Math.random() * 7)
   return {
     x: x + Math.cos(angle) * offset,
     y: y + Math.sin(angle) * offset,
     vx: Math.cos(angle) * speed,
     vy: Math.sin(angle) * speed - 10 * TEMPO,
     age: 0,
-    life: (0.9 + Math.random() * 1.3) / TEMPO,
+    life: (1.4 + Math.random() * 1.8) / TEMPO,
     size: 0.5 + Math.pow(Math.random(), 1.6) * 1.8,
     phase: Math.random() * Math.PI * 2,
     twinkle: (4 + Math.random() * 6) * TEMPO,
@@ -82,12 +82,10 @@ function shape(irregular: number): [number, number][] {
   })
 }
 
-function spawn(shard: Shard, initial: boolean) {
-  const spread = Math.pow(Math.random(), 0.7)
-  const angle = Math.random() * Math.PI * 2
-  shard.x = Math.cos(angle) * spread * 1.6
-  shard.y = Math.sin(angle) * spread * 1.6
-  shard.z = initial ? 0.08 + Math.random() * 0.92 : 1
+function spawn(shard: Shard, initial: boolean, spanX: number, spanY: number) {
+  shard.z = initial ? 0.12 + Math.random() * 0.88 : 0.75 + Math.random() * 0.25
+  shard.x = (Math.random() * 2 - 1) * spanX * 1.08 * shard.z
+  shard.y = (Math.random() * 2 - 1) * spanY * 1.08 * shard.z
   shard.rot = Math.random() * Math.PI * 2
   shard.spin = (Math.random() - 0.5) * 1.6
   shard.size = 0.45 + Math.pow(Math.random(), 2.2) * 1.9
@@ -118,7 +116,14 @@ export function Intro({ onDone }: { onDone: () => void }) {
     }
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) return
+    if (!canvas || !ctx) {
+      done.current()
+      return
+    }
+
+    const hold = (event: Event) => event.preventDefault()
+    window.addEventListener('wheel', hold, { passive: false })
+    window.addEventListener('touchmove', hold, { passive: false })
 
     let w = 0
     let h = 0
@@ -134,16 +139,18 @@ export function Intro({ onDone }: { onDone: () => void }) {
     resize()
     window.addEventListener('resize', resize)
 
+    const focalOf = () => Math.max(w, h) * 0.42
+    const respawn = (shard: Shard, initial: boolean) => spawn(shard, initial, w / 2 / focalOf(), h / 2 / focalOf())
     const count = Math.round(Math.min(560, Math.max(260, (w * h) / 2600)))
     const shards: Shard[] = Array.from({ length: count }, () => {
       const shard = { x: 0, y: 0, z: 1, rot: 0, spin: 0, size: 1, verts: [] } as Shard
-      spawn(shard, true)
+      respawn(shard, true)
       return shard
     })
     const hero = { verts: shape(0.18), rot: -0.35, fx: 0.4, fy: 0.42 }
     const white = glow('255,255,255')
     const lime = glow('236,250,180')
-    const motes: Mote[] = Array.from({ length: Math.round(Math.min(220, Math.max(90, (w * h) / 6500))) }, () => {
+    const motes: Mote[] = Array.from({ length: Math.round(Math.min(340, Math.max(130, (w * h) / 4000))) }, () => {
       const mote = {} as Mote
       ambient(mote, w, h, true)
       return mote
@@ -175,8 +182,8 @@ export function Intro({ onDone }: { onDone: () => void }) {
       }
 
       if (emit) {
-        shedding += dt * 75 * TEMPO
-        while (shedding >= 1 && sparks.length < 260) {
+        shedding += dt * 34 * TEMPO
+        while (shedding >= 1 && sparks.length < 200) {
           sparks.push(shed(heroX, heroY, heroR))
           shedding -= 1
         }
@@ -215,7 +222,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
 
       const cx = w / 2
       const cy = h / 2
-      const focal = Math.max(w, h) * 0.42
+      const focal = focalOf()
       const unit = Math.min(w, h) * 0.0042
 
       ctx.fillStyle = '#000'
@@ -229,7 +236,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
         const sy = cy + (shard.y / shard.z) * focal
         const r = (shard.size * unit) / shard.z
         if (shard.z < 0.04 || sx < -60 || sx > w + 60 || sy < -60 || sy > h + 60) {
-          spawn(shard, false)
+          respawn(shard, false)
           continue
         }
         ctx.globalAlpha = Math.min(1, (1 - shard.z) * 2.6)
@@ -275,6 +282,8 @@ export function Intro({ onDone }: { onDone: () => void }) {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
+      window.removeEventListener('wheel', hold)
+      window.removeEventListener('touchmove', hold)
     }
   }, [reduce])
 

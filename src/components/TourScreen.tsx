@@ -35,7 +35,7 @@ export const TourScreen = forwardRef<HTMLElement, Props>(function TourScreen(
               key={item.id}
               ref={(node) => buttonRef(index, node)}
               type="button"
-              className={`pill pill-${item.id}${item.ghost ? ' ghost' : ''}`}
+              className={`pill pill-${item.id} ghost`}
               onClick={() => onNavigate(item.id)}
             >
               {item.label}
