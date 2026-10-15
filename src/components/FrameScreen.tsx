@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react'
 import { mobileSizes, type Crop, type Frame } from '../frames'
 import { Logo } from './Logo'
 import { PEN_AREA, PenNib } from './PenNib'
@@ -14,6 +14,22 @@ function subscribe(onChange: () => void) {
 
 function usePhone() {
   return useSyncExternalStore(subscribe, () => window.matchMedia(PHONE).matches)
+}
+
+const overlaps = (crop: Crop, box: Crop) =>
+  crop.x < box.x + box.w && crop.x + crop.w > box.x && crop.y < box.y + box.h && crop.y + crop.h > box.y
+
+function accentStyle(src: string, box?: Crop, frame?: Crop): CSSProperties {
+  const mask = `url(${src})`
+  const place = box && frame
+    ? {
+        left: `${(box.x / frame.w) * 100}%`,
+        top: `${(box.y / frame.h) * 100}%`,
+        width: `${(box.w / frame.w) * 100}%`,
+        height: `${(box.h / frame.h) * 100}%`,
+      }
+    : { inset: 0 }
+  return { ...place, maskImage: mask, WebkitMaskImage: mask }
 }
 
 const contains = (crop: Crop, box: Crop) =>
@@ -35,7 +51,7 @@ export function FrameScreen(props: Frame & { eager?: boolean }) {
 }
 
 function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop: Crop; index?: number }) {
-  const { name, width, height, sizes, alt, logo, pen, eager } = frame
+  const { name, width, height, sizes, alt, logo, pen, accent, eager } = frame
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
   const logoBox = logo && { x: logo.left, y: logo.top, w: logo.width, h: logo.width * LOGO_RATIO }
@@ -75,6 +91,12 @@ function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop
         loading={eager && (desktop || index === 0) ? 'eager' : 'lazy'}
         decoding="async"
       />
+      {accent && desktop && (
+        <div className="frame-accent" style={accentStyle(`/screens/${name}-accent.png`, accent, crop)} />
+      )}
+      {accent && !desktop && overlaps(crop, accent) && (
+        <div className="frame-accent" style={accentStyle(`/screens/m${name}-${index}-accent.png`)} />
+      )}
       {showLogo && logo && (
         <Logo
           className="frame-logo"

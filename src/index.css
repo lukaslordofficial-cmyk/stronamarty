@@ -1,7 +1,36 @@
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #bfde42;
+}
+
+@keyframes accent-cycle {
+  0%,
+  8.33% {
+    --accent: #bfde42;
+  }
+  25%,
+  33.33% {
+    --accent: #9b6bff;
+  }
+  50%,
+  58.33% {
+    --accent: #ffd23f;
+  }
+  75%,
+  83.33% {
+    --accent: #ffb3d9;
+  }
+  100% {
+    --accent: #bfde42;
+  }
+}
+
 :root {
+  --accent: #bfde42;
   --ink: #212121;
   --pill: #303030;
-  --lime: #bfde42;
+  animation: accent-cycle 12s ease-in-out infinite;
   --paper: #ffffff;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   color: var(--ink);
@@ -115,6 +144,10 @@ main {
   overflow: visible;
 }
 
+.logo-m {
+  fill: var(--accent);
+}
+
 .logo-pen {
   fill: none;
   stroke: #fff;
@@ -171,6 +204,16 @@ main {
   position: absolute;
 }
 
+.frame-accent {
+  position: absolute;
+  background: var(--accent);
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
 .frame-pen {
   position: absolute;
   inset: 0;
@@ -217,7 +260,7 @@ main {
   top: 18.594cqw;
   width: 6.458cqw;
   height: 6.198cqw;
-  fill: var(--lime);
+  fill: var(--accent);
   overflow: visible;
 }
 
@@ -270,14 +313,14 @@ main {
 }
 
 .pill.ghost:hover {
-  background: var(--lime);
-  border-color: var(--lime);
+  background: var(--accent);
+  border-color: var(--accent);
   color: var(--ink);
 }
 
 .pill:focus-visible,
 .burger:focus-visible {
-  outline: 2px solid var(--lime);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -590,6 +633,10 @@ body.is-ready .pill-about {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    animation: none;
+  }
+
   .burger,
   .burger span,
   body.is-ready .tour-logo,

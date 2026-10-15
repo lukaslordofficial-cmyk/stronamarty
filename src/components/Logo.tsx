@@ -55,8 +55,11 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
   return (
     <span className={`logo ${play ? 'is-writing' : ''} ${className}`.trim()} role="img" aria-label="Mart" style={style}>
       <svg viewBox="0 0 1002 444" aria-hidden="true">
-        {!written && (
-          <defs>
+        <defs>
+          <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444" style={{ maskType: 'alpha' }}>
+            <image href="/logo-m.png" width="1002" height="444" />
+          </mask>
+          {!written && (
             <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
               {STROKES.map((d, index) => (
                 <path
@@ -78,9 +81,9 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
                 />
               ))}
             </mask>
-          </defs>
-        )}
-        <image href="/logo-m.png" width="1002" height="444" />
+          )}
+        </defs>
+        <rect className="logo-m" width="1002" height="444" mask={`url(#${id}-m)`} />
         <image href="/logo-art.png" width="1002" height="444" mask={written ? undefined : `url(#${id})`} />
       </svg>
     </span>

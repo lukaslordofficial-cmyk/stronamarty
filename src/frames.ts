@@ -11,6 +11,7 @@ export type Frame = {
   alt: string
   logo?: { left: number; top: number; width: number }
   pen?: boolean
+  accent?: Crop
   mobile?: Crop[]
 }
 
@@ -34,6 +35,7 @@ const designed: Frame[] = [
     sizes: FULL,
     alt: 'Hi I’m Marta Bensalem, UX/UI Designer. I create experiences that are impactful and perhaps, even a bit delightful.',
     logo: { left: 1182, top: 151, width: 334 },
+    accent: { x: 0, y: 0, w: 700, h: 2772 },
   },
   {
     id: 'work',
