@@ -1,26 +1,14 @@
-import { useEffect, useId, useState, type CSSProperties } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 const STROKES = [
-  {
-    d: 'M552 200C520 160 450 175 418 235C385 295 368 352 395 377C420 398 470 348 505 290C530 250 548 215 552 200C540 245 505 330 498 362C494 386 520 386 548 356',
-    duration: 0.7,
-    delay: 0,
-  },
-  {
-    d: 'M548 356C578 318 612 252 640 215C656 198 684 212 690 240C705 214 742 198 786 198L788 292',
-    duration: 0.45,
-    delay: 0.66,
-  },
-  {
-    d: 'M968 78C925 150 868 250 838 322C820 365 842 398 885 362C915 335 945 302 962 286',
-    duration: 0.45,
-    delay: 1.08,
-  },
-  { d: 'M838 190L978 190', duration: 0.24, delay: 1.5 },
+  'M545 215C543 192 525 180 505 180C488 180 474 186 462 200C430 235 395 275 372 310C362 330 362 360 368 375C378 385 400 378 425 362C455 342 480 318 505 295C518 280 528 262 535 245L505 300C500 320 498 345 502 356C510 360 525 356 540 345C580 315 620 260 645 222C660 195 672 160 680 135C668 160 656 190 650 215C670 224 705 222 735 208C725 240 698 295 682 340C676 360 686 370 710 364C740 352 765 320 785 298',
+  'M955 90C935 120 915 150 903 170C880 205 848 255 830 295C814 332 806 365 818 378C840 383 880 360 950 298',
+  'M848 192L962 192',
 ]
 
-const TOTAL = 1.8
+const DURATION = 0.95
+const PEN_LIFT = 0.04
 
 type Props = {
   className?: string
@@ -33,13 +21,32 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
   const reduce = useReducedMotion()
   const id = useId().replace(/:/g, '')
   const [done, setDone] = useState(false)
+  const [timing, setTiming] = useState<{ duration: number; delay: number }[] | null>(null)
+  const paths = useRef<(SVGPathElement | null)[]>([])
+
+  useLayoutEffect(() => {
+    if (timing) return
+    const lengths = paths.current.map((path) => path?.getTotalLength() ?? 0)
+    const total = lengths.reduce((sum, length) => sum + length, 0)
+    if (!total) return
+    const drawing = DURATION - PEN_LIFT * (lengths.length - 1)
+    let start = 0
+    setTiming(
+      lengths.map((length) => {
+        const duration = (drawing * length) / total
+        const entry = { duration, delay: start }
+        start += duration + PEN_LIFT
+        return entry
+      }),
+    )
+  })
 
   useEffect(() => {
     if (!play) {
       setDone(false)
       return
     }
-    const timer = window.setTimeout(() => setDone(true), (delay + TOTAL) * 1000 + 80)
+    const timer = window.setTimeout(() => setDone(true), (delay + DURATION) * 1000 + 60)
     return () => window.clearTimeout(timer)
   }, [play, delay])
 
@@ -51,19 +58,25 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
         {!written && (
           <defs>
             <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
-              <g className="logo-pen">
-                {STROKES.map((stroke) => (
-                  <path
-                    key={stroke.d}
-                    d={stroke.d}
-                    pathLength={1}
-                    style={{
-                      animationDuration: `${stroke.duration}s`,
-                      animationDelay: `${delay + stroke.delay}s`,
-                    }}
-                  />
-                ))}
-              </g>
+              {STROKES.map((d, index) => (
+                <path
+                  key={d}
+                  ref={(node) => {
+                    paths.current[index] = node
+                  }}
+                  className="logo-pen"
+                  d={d}
+                  pathLength={1}
+                  style={
+                    timing?.[index]
+                      ? {
+                          animationDuration: `${timing[index].duration}s`,
+                          animationDelay: `${delay + timing[index].delay}s`,
+                        }
+                      : undefined
+                  }
+                />
+              ))}
             </mask>
           </defs>
         )}
