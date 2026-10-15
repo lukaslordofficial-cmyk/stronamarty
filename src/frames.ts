@@ -6,6 +6,7 @@ export type Frame = {
   sizes: number[]
   alt: string
   logo?: { left: number; top: number; width: number }
+  pen?: boolean
 }
 
 const FULL = [1280, 1920, 2560, 3200]
@@ -27,6 +28,7 @@ export const frames: Frame[] = [
     height: 2673,
     sizes: FULL,
     alt: 'Great UX is knowing what matters, what belongs together, and what deserves to stand out.',
+    pen: true,
   },
   { name: '04', width: 4820, height: 2740, sizes: FULL, alt: 'Wireframes of a plugin catalog and content cards.' },
   { name: '05', width: 5072, height: 2796, sizes: FULL, alt: 'A feedback section above phones showing data usage.' },
