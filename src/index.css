@@ -270,7 +270,9 @@ main {
 }
 
 .pill.ghost:hover {
-  border-color: var(--pill);
+  background: var(--lime);
+  border-color: var(--lime);
+  color: var(--ink);
 }
 
 .pill:focus-visible,
@@ -291,15 +293,15 @@ main {
   width: 9.167cqw;
 }
 
-.pill-work {
+.pill-uxui {
   left: 29.948cqw;
 }
 
-.pill-about {
+.pill-print {
   left: 43.88cqw;
 }
 
-.pill-contact {
+.pill-about {
   left: 57.812cqw;
 }
 
@@ -320,15 +322,15 @@ body.is-ready .tour-title-text {
   animation-delay: 0.08s;
 }
 
-body.is-ready .pill-work {
+body.is-ready .pill-uxui {
   animation-delay: 0.22s;
 }
 
-body.is-ready .pill-about {
+body.is-ready .pill-print {
   animation-delay: 0.28s;
 }
 
-body.is-ready .pill-contact {
+body.is-ready .pill-about {
   animation-delay: 0.34s;
 }
 
