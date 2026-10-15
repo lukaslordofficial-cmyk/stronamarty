@@ -23,8 +23,10 @@ const GROUPS: Shape[][] = [
   [ellipse(1551.4, 1178.5, 373.4, 272.1, -57.03), ellipse(1560, 1177.2, 344.2, 323.4, 4)],
 ]
 
-const SHAKE = 2.2
-const TILT = 0.3
+const SHAKE = 1.8
+const TILT = 0.25
+const DRIFT = 9
+const DRIFT_TILT = 1.8
 const TOUCH_HOLD = 1400
 const PAD = 28
 
@@ -68,7 +70,22 @@ export function TourShapes() {
     if (!svg || !section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const shapes = GROUPS.flat()
-    const state = shapes.map(() => ({ x: 0, y: 0, r: 0, tx: 0, ty: 0, tr: 0, next: 0 }))
+    const state = shapes.map(() => ({
+      x: 0,
+      y: 0,
+      r: 0,
+      tx: 0,
+      ty: 0,
+      tr: 0,
+      next: 0,
+      fx: 0,
+      fy: 0,
+      fr: 0,
+      ftx: 0,
+      fty: 0,
+      ftr: 0,
+      drift: 0,
+    }))
     const touched = GROUPS.map(() => 0)
     let pointer: Point | null = null
     let raf = 0
@@ -104,16 +121,32 @@ export function TourShapes() {
           } else if (!on) {
             s.tx = s.ty = s.tr = 0
           }
+          if (on && now > s.drift) {
+            s.ftx = (Math.random() * 2 - 1) * DRIFT
+            s.fty = (Math.random() * 2 - 1) * DRIFT
+            s.ftr = (Math.random() * 2 - 1) * DRIFT_TILT
+            s.drift = now + 650 + Math.random() * 600
+          } else if (!on) {
+            s.ftx = s.fty = s.ftr = 0
+            s.drift = 0
+          }
           const ease = 1 - Math.exp(-dt * (on ? 55 : 18))
           s.x += (s.tx - s.x) * ease
           s.y += (s.ty - s.y) * ease
           s.r += (s.tr - s.r) * ease
-          if (on || Math.abs(s.x) + Math.abs(s.y) + Math.abs(s.r) > 0.01) moving = true
+          const float = 1 - Math.exp(-dt * (on ? 2.6 : 4))
+          s.fx += (s.ftx - s.fx) * float
+          s.fy += (s.fty - s.fy) * float
+          s.fr += (s.ftr - s.fr) * float
+          const x = s.x + s.fx
+          const y = s.y + s.fy
+          const r = s.r + s.fr
+          if (on || Math.abs(x) + Math.abs(y) + Math.abs(r) > 0.01) moving = true
           const [cx, cy] = pivot(shape)
           const base = shape.kind === 'ellipse' ? ` rotate(${shape.angle} ${cx} ${cy})` : ''
           nodes.current[offset + i]?.setAttribute(
             'transform',
-            `translate(${s.x.toFixed(2)} ${s.y.toFixed(2)}) rotate(${s.r.toFixed(3)} ${cx} ${cy})${base}`,
+            `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${r.toFixed(3)} ${cx} ${cy})${base}`,
           )
         })
         offset += group.length
