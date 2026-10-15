@@ -110,7 +110,7 @@ export default function App() {
     <>
       {!ready && <Intro onDone={finishIntro} />}
       <main>
-        <TourScreen ref={tourRef} concealNav={docked} onNavigate={go} buttonRef={buttonRef} />
+        <TourScreen ref={tourRef} ready={ready} concealNav={docked} onNavigate={go} buttonRef={buttonRef} />
         {frames.map((frame, index) => (
           <FrameScreen key={frame.name} {...frame} eager={index === 0} />
         ))}

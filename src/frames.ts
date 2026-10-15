@@ -5,6 +5,7 @@ export type Frame = {
   height: number
   sizes: number[]
   alt: string
+  logo?: { left: number; top: number; width: number }
 }
 
 const FULL = [1280, 1920, 2560, 3200]
@@ -17,6 +18,7 @@ export const frames: Frame[] = [
     height: 2772,
     sizes: FULL,
     alt: 'Hi I’m Marta Bensalem, UX/UI Designer. I create experiences that are impactful and perhaps, even a bit delightful.',
+    logo: { left: 1182, top: 151, width: 334 },
   },
   {
     id: 'work',
