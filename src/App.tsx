@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { AboutScreen } from './components/AboutScreen'
 import { FrameScreen } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
@@ -22,10 +21,8 @@ export default function App() {
   const finishIntro = useCallback(() => setReady(true), [])
 
   useEffect(() => {
-    for (const frame of frames) {
-      const image = new Image()
-      image.src = frame.src
-    }
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    window.scrollTo(0, 0)
   }, [])
 
   useEffect(() => {
@@ -58,16 +55,14 @@ export default function App() {
 
         if (dockedRef.current || ratio >= 0.7) return
 
-        const burger = burgerRef.current?.getBoundingClientRect()
+        const lines = burgerRef.current ? [...burgerRef.current.querySelectorAll('span')] : []
         const next = buttonRefs.current.flatMap((node, index) => {
-          if (!node || !burger || burger.width === 0) return []
+          const line = lines[index]?.getBoundingClientRect()
+          if (!node || !line || line.width === 0) return []
           const rect = node.getBoundingClientRect()
           if (rect.width < 8) return []
-          const line = 2
-          const gap = 5
-          const block = line * 3 + gap * 2
-          const targetY = burger.top + (burger.height - block) / 2 + index * (line + gap) + line / 2
-          const targetX = burger.left + burger.width / 2
+          const targetX = line.left + line.width / 2
+          const targetY = line.top + line.height / 2
           const item = MENU[index]
           if (!item) return []
           return [
@@ -80,6 +75,8 @@ export default function App() {
               height: rect.height,
               dx: targetX - (rect.left + rect.width / 2),
               dy: targetY - (rect.top + rect.height / 2),
+              lineWidth: line.width,
+              lineHeight: line.height,
             },
           ]
         })
@@ -114,9 +111,8 @@ export default function App() {
       {!ready && <Intro onDone={finishIntro} />}
       <main>
         <TourScreen ref={tourRef} concealNav={docked} onNavigate={go} buttonRef={buttonRef} />
-        <AboutScreen />
-        {frames.map((frame) => (
-          <FrameScreen key={frame.src} {...frame} />
+        {frames.map((frame, index) => (
+          <FrameScreen key={frame.name} {...frame} eager={index === 0} />
         ))}
       </main>
       {ready && (

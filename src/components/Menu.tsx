@@ -11,6 +11,8 @@ export type Stitch = {
   height: number
   dx: number
   dy: number
+  lineWidth: number
+  lineHeight: number
 }
 
 type Props = {
@@ -74,12 +76,13 @@ export function Menu({
           key={stitch.label}
           className={stitch.ghost ? 'stitch ghost' : 'stitch'}
           style={{ left: stitch.left, top: stitch.top, width: stitch.width, height: stitch.height }}
-          initial={{ x: 0, y: 0, scaleX: 1, scaleY: 1 }}
+          initial={{ x: 0, y: 0, scaleX: 1, scaleY: 1, backgroundColor: stitch.ghost ? '#ffffff' : '#303030' }}
           animate={{
             x: stitch.dx,
             y: stitch.dy,
-            scaleX: 18 / stitch.width,
-            scaleY: 2 / Math.max(stitch.height, 1),
+            scaleX: stitch.lineWidth / stitch.width,
+            scaleY: stitch.lineHeight / Math.max(stitch.height, 1),
+            backgroundColor: '#111111',
           }}
           transition={{
             duration: reduce ? 0.01 : 0.72,
@@ -141,7 +144,7 @@ export function Menu({
                     <button
                       ref={index === 0 ? firstRef : undefined}
                       type="button"
-                      className={item.ghost ? 'pill ghost' : 'pill'}
+                      className={item.ghost ? 'pill menu-pill ghost' : 'pill menu-pill'}
                       onClick={() => onNavigate(item.id)}
                     >
                       {item.label}
