@@ -10,5 +10,5 @@ export type MenuItem = {
 export const MENU: MenuItem[] = [
   { id: 'uxui', label: 'UX/UI', ghost: true, target: 'work' },
   { id: 'print', label: 'Print', ghost: true, target: null },
-  { id: 'about', label: 'about me', ghost: true, target: 'about' },
+  { id: 'about', label: 'About me', ghost: true, target: 'about' },
 ]

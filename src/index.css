@@ -339,7 +339,7 @@ main {
 
 .tour-nav .pill {
   position: absolute;
-  top: 31.354cqw;
+  top: 29.28cqw;
   height: 4.323cqw;
   font-size: 1.36cqw;
   pointer-events: auto;
@@ -350,7 +350,7 @@ main {
 }
 
 .pill-uxui {
-  left: 31.854cqw;
+  left: 29.948cqw;
 }
 
 .pill-print {
@@ -358,7 +358,7 @@ main {
 }
 
 .pill-about {
-  left: 55.906cqw;
+  left: 57.812cqw;
 }
 
 /* Entrance after the intro */
@@ -627,8 +627,8 @@ body.is-ready .pill-about {
     position: relative;
     inset: auto;
     display: flex;
-    gap: 1.8cqw;
-    margin-top: 9cqw;
+    gap: 3cqw;
+    margin-top: 4.5cqw;
   }
 
   .tour-nav .pill {

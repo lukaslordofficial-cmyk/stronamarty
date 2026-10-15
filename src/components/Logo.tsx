@@ -21,6 +21,8 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
   const reduce = useReducedMotion()
   const id = useId().replace(/:/g, '')
   const [done, setDone] = useState(false)
+  const [round, setRound] = useState(0)
+  const start = round ? 0 : delay
   const [timing, setTiming] = useState<{ duration: number; delay: number }[] | null>(null)
   const paths = useRef<(SVGPathElement | null)[]>([])
 
@@ -46,21 +48,33 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
       setDone(false)
       return
     }
-    const timer = window.setTimeout(() => setDone(true), (delay + DURATION) * 1000 + 60)
+    const timer = window.setTimeout(() => setDone(true), (start + DURATION) * 1000 + 60)
     return () => window.clearTimeout(timer)
-  }, [play, delay])
+  }, [play, start, round])
 
   const written = done || reduce
 
+  const rewrite = () => {
+    if (!play || reduce || !done) return
+    setDone(false)
+    setRound((value) => value + 1)
+  }
+
   return (
-    <span className={`logo ${play ? 'is-writing' : ''} ${className}`.trim()} role="img" aria-label="Mart" style={style}>
+    <span
+      className={`logo ${play ? 'is-writing' : ''} ${className}`.trim()}
+      role="img"
+      aria-label="Mart"
+      style={style}
+      onPointerEnter={rewrite}
+    >
       <svg viewBox="0 0 1002 444" aria-hidden="true">
         <defs>
           <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444" style={{ maskType: 'alpha' }}>
             <image href="/logo-m.png" width="1002" height="444" />
           </mask>
           {!written && (
-            <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
+            <mask key={round} id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
               {STROKES.map((d, index) => (
                 <path
                   key={d}
@@ -74,7 +88,7 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
                     timing?.[index]
                       ? {
                           animationDuration: `${timing[index].duration}s`,
-                          animationDelay: `${delay + timing[index].delay}s`,
+                          animationDelay: `${start + timing[index].delay}s`,
                         }
                       : undefined
                   }
