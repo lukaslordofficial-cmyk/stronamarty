@@ -14,13 +14,15 @@ type Props = {
   className?: string
   play: boolean
   delay?: number
+  instant?: boolean
+  onActivate?: () => void
   style?: CSSProperties
 }
 
-export function Logo({ className = '', play, delay = 0, style }: Props) {
+export function Logo({ className = '', play, delay = 0, instant = false, onActivate, style }: Props) {
   const reduce = useReducedMotion()
   const id = useId().replace(/:/g, '')
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState(instant)
   const [round, setRound] = useState(0)
   const start = round ? 0 : delay
   const [timing, setTiming] = useState<{ duration: number; delay: number }[] | null>(null)
@@ -60,46 +62,54 @@ export function Logo({ className = '', play, delay = 0, style }: Props) {
     setRound((value) => value + 1)
   }
 
-  return (
-    <span
-      className={`logo ${play ? 'is-writing' : ''} ${className}`.trim()}
-      role="img"
-      aria-label="Mart"
-      style={style}
-      onPointerEnter={rewrite}
-    >
-      <svg viewBox="0 0 1002 444" aria-hidden="true">
-        <defs>
-          <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444" style={{ maskType: 'alpha' }}>
-            <image href="/logo-m.png" width="1002" height="444" />
+  const mark = (
+    <svg viewBox="0 0 1002 444" aria-hidden="true">
+      <defs>
+        <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444" style={{ maskType: 'alpha' }}>
+          <image href="/logo-m.png" width="1002" height="444" />
+        </mask>
+        {!written && (
+          <mask key={round} id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
+            {STROKES.map((d, index) => (
+              <path
+                key={d}
+                ref={(node) => {
+                  paths.current[index] = node
+                }}
+                className="logo-pen"
+                d={d}
+                pathLength={1}
+                style={
+                  timing?.[index]
+                    ? {
+                        animationDuration: `${timing[index].duration}s`,
+                        animationDelay: `${start + timing[index].delay}s`,
+                      }
+                    : undefined
+                }
+              />
+            ))}
           </mask>
-          {!written && (
-            <mask key={round} id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1002" height="444">
-              {STROKES.map((d, index) => (
-                <path
-                  key={d}
-                  ref={(node) => {
-                    paths.current[index] = node
-                  }}
-                  className="logo-pen"
-                  d={d}
-                  pathLength={1}
-                  style={
-                    timing?.[index]
-                      ? {
-                          animationDuration: `${timing[index].duration}s`,
-                          animationDelay: `${start + timing[index].delay}s`,
-                        }
-                      : undefined
-                  }
-                />
-              ))}
-            </mask>
-          )}
-        </defs>
-        <rect className="logo-m" width="1002" height="444" mask={`url(#${id}-m)`} />
-        <image href="/logo-art.png" width="1002" height="444" mask={written ? undefined : `url(#${id})`} />
-      </svg>
+        )}
+      </defs>
+      <rect className="logo-m" width="1002" height="444" mask={`url(#${id}-m)`} />
+      <image href="/logo-art.png" width="1002" height="444" mask={written ? undefined : `url(#${id})`} />
+    </svg>
+  )
+
+  const classNames = `logo ${play ? 'is-writing' : ''} ${className}`.trim()
+
+  if (onActivate) {
+    return (
+      <button type="button" className={classNames} aria-label="Back to start" style={style} onPointerEnter={rewrite} onClick={onActivate}>
+        {mark}
+      </button>
+    )
+  }
+
+  return (
+    <span className={classNames} role="img" aria-label="Mart" style={style} onPointerEnter={rewrite}>
+      {mark}
     </span>
   )
 }

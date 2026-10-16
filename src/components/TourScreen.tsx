@@ -7,11 +7,12 @@ type Props = {
   ready: boolean
   concealNav: boolean
   onNavigate: (id: MenuId) => void
+  onHome: () => void
   buttonRef: (index: number, node: HTMLButtonElement | null) => void
 }
 
 export const TourScreen = forwardRef<HTMLElement, Props>(function TourScreen(
-  { ready, concealNav, onNavigate, buttonRef },
+  { ready, concealNav, onNavigate, onHome, buttonRef },
   ref,
 ) {
   return (
@@ -22,7 +23,7 @@ export const TourScreen = forwardRef<HTMLElement, Props>(function TourScreen(
       </div>
 
       <div className="tour-stage tour-content">
-        <Logo className="tour-logo" play={ready} delay={0.45} />
+        <Logo className="tour-logo" play={ready} delay={0.45} onActivate={onHome} />
 
         <h1 className="tour-title">
           <svg className="tour-blob" viewBox="0 0 373 355" aria-hidden="true">

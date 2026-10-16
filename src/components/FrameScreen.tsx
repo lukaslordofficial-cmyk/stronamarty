@@ -35,7 +35,7 @@ function accentStyle(src: string, box?: Crop, frame?: Crop): CSSProperties {
 const contains = (crop: Crop, box: Crop) =>
   !crop.rotate && box.x >= crop.x && box.y >= crop.y && box.x + box.w <= crop.x + crop.w && box.y + box.h <= crop.y + crop.h
 
-export function FrameScreen(props: Frame & { eager?: boolean }) {
+export function FrameScreen(props: Frame & { eager?: boolean; onHome?: () => void }) {
   const { id, name, width, height, mobile } = props
   const phone = usePhone()
 
@@ -50,8 +50,16 @@ export function FrameScreen(props: Frame & { eager?: boolean }) {
   )
 }
 
-export function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop: Crop; index?: number }) {
-  const { name, width, height, sizes, alt, logo, pen, accent, eager } = frame
+export function Tile({
+  frame,
+  crop,
+  index,
+}: {
+  frame: Frame & { eager?: boolean; onHome?: () => void }
+  crop: Crop
+  index?: number
+}) {
+  const { name, width, height, sizes, alt, logo, pen, accent, eager, onHome } = frame
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
   const logoBox = logo && { x: logo.left, y: logo.top, w: logo.width, h: logo.width * LOGO_RATIO }
@@ -102,6 +110,7 @@ export function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean 
           className="frame-logo"
           play={inView}
           delay={0.15}
+          onActivate={onHome}
           style={{
             left: `${((logo.left - crop.x) / crop.w) * 100}%`,
             top: `${((logo.top - crop.y) / crop.h) * 100}%`,

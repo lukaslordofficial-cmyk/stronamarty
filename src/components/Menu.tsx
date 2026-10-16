@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { MENU, type MenuId } from '../menu'
+import { Logo } from './Logo'
 
 export type Stitch = {
   label: string
@@ -23,6 +24,7 @@ type Props = {
   onToggle: () => void
   onClose: () => void
   onNavigate: (id: MenuId) => void
+  onHome: () => void
   onStitchDone: () => void
 }
 
@@ -34,6 +36,7 @@ export function Menu({
   onToggle,
   onClose,
   onNavigate,
+  onHome,
   onStitchDone,
 }: Props) {
   const reduce = useReducedMotion()
@@ -55,6 +58,12 @@ export function Menu({
 
   return (
     <>
+      <Logo
+        className={`home-logo ${docked ? 'is-on' : ''}`}
+        play={docked}
+        instant
+        onActivate={onHome}
+      />
       <button
         ref={burgerRef}
         type="button"

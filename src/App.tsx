@@ -3,6 +3,7 @@ import { useReducedMotion } from 'framer-motion'
 import { FrameScreen, usePhone } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
+import { PageIntro } from './components/PageIntro'
 import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
 import { WorkMobile } from './components/WorkMobile'
@@ -25,6 +26,7 @@ export default function App() {
   const reduce = useReducedMotion()
   const phone = usePhone()
   const [ready, setReady] = useState(false)
+  const [loop, setLoop] = useState(0)
   const [view, setView] = useState<View>(viewFromHash)
   const [open, setOpen] = useState(false)
   const [stitches, setStitches] = useState<Stitch[] | null>(null)
@@ -101,26 +103,54 @@ export default function App() {
     [sew, view],
   )
 
+  const goHome = useCallback(() => {
+    setOpen(false)
+    setStitches(null)
+    document.documentElement.classList.remove('gate-open')
+    if (view !== 'tour') {
+      history.pushState(null, '', `${window.location.pathname}${window.location.search}`)
+      setView('tour')
+    }
+    setReady(false)
+    setLoop((value) => value + 1)
+  }, [view])
+
   const closeMenu = useCallback(() => setOpen(false), [])
   const clearStitches = useCallback(() => setStitches(null), [])
   const page = view === 'tour' || view === 'print' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
 
   return (
     <>
-      {!ready && <Intro onDone={finishIntro} />}
+      {!ready && <Intro key={loop} onDone={finishIntro} />}
       <main>
         {view === 'print' ? (
-          <PrintPage key={view} onNavigate={go} />
+          <>
+            <PageIntro key="print" page="print" />
+            <PrintPage key={view} onNavigate={go} />
+          </>
         ) : view === 'work' && phone ? (
-          <WorkMobile />
+          <>
+            <PageIntro key="work" page="work" />
+            <WorkMobile />
+          </>
         ) : page ? (
-          <div key={view} className="page">
-            {page.map((frame, index) => (
-              <FrameScreen key={frame.name} {...frame} eager={index === 0} />
-            ))}
-          </div>
+          <>
+            <PageIntro key={view} page={view === 'about' ? 'about' : 'work'} />
+            <div key={view} className="page">
+              {page.map((frame, index) => (
+                <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
+              ))}
+            </div>
+          </>
         ) : (
-          <TourScreen ready={ready} concealNav={false} onNavigate={go} buttonRef={buttonRef} />
+          <TourScreen
+            key={loop}
+            ready={ready}
+            concealNav={false}
+            onNavigate={go}
+            onHome={goHome}
+            buttonRef={buttonRef}
+          />
         )}
       </main>
       {ready && (
@@ -132,6 +162,7 @@ export default function App() {
           onToggle={() => setOpen((value) => !value)}
           onClose={closeMenu}
           onNavigate={go}
+          onHome={goHome}
           onStitchDone={clearStitches}
         />
       )}

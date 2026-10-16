@@ -147,7 +147,11 @@ main {
 
 .logo {
   display: block;
+  padding: 0;
+  border: 0;
+  background: none;
   line-height: 0;
+  cursor: pointer;
 }
 
 .logo svg {
@@ -215,6 +219,22 @@ main {
 
 .frame-logo {
   position: absolute;
+}
+
+.home-logo {
+  position: fixed;
+  top: max(16px, 2.4vw);
+  left: max(16px, 3vw);
+  z-index: 90;
+  width: clamp(68px, 5.2vw, 104px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.home-logo.is-on {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .frame-accent {
@@ -332,7 +352,9 @@ main {
 }
 
 .pill:focus-visible,
-.burger:focus-visible {
+.burger:focus-visible,
+.home-logo:focus-visible,
+.tour-logo:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -642,6 +664,12 @@ body.is-ready .pill-about {
   .burger {
     top: 16px;
     right: 16px;
+  }
+
+  .home-logo {
+    top: 18px;
+    left: 16px;
+    width: 72px;
   }
 }
 
