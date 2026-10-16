@@ -9,13 +9,8 @@ html.gate-open body {
   z-index: 80;
   display: grid;
   place-items: center;
-  padding: 24px 20px 72px;
-  border: 0;
-  cursor: pointer;
-  touch-action: manipulation;
+  padding: 24px 20px 48px;
   color: inherit;
-  font: inherit;
-  text-align: left;
 }
 
 .gate.is-out {
@@ -31,11 +26,6 @@ html.gate-open body {
 .gate.is-work {
   background: #f4f4f4;
   color: #161616;
-}
-
-.gate.is-about {
-  background: #f7f8f2;
-  color: #212121;
 }
 
 .gate-window {
@@ -96,8 +86,14 @@ html.gate-open body {
 .gate-body {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
-  padding: 36px 32px 40px;
+  padding: 36px 32px 32px;
+}
+
+.gate-kicker,
+.gate-copy {
+  margin: 0;
 }
 
 .gate-kicker {
@@ -108,6 +104,7 @@ html.gate-open body {
 }
 
 .gate-title {
+  margin: 0;
   font-size: clamp(28px, 5vw, 40px);
   font-weight: 800;
   line-height: 1.12;
@@ -122,16 +119,45 @@ html.gate-open body {
   color: #4a4450;
 }
 
-.gate-hint {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: inherit;
-  opacity: 0.45;
-  transform: translateX(-50%);
+.gate-check {
+  appearance: none;
+  margin-top: 12px;
+  padding: 10px 22px;
+  border: 1px solid #222;
+  border-radius: 999px;
+  background: #161616;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 0.35s var(--ease-out),
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.gate-check:hover {
+  transform: translateY(-1px);
+  background: #000;
+  border-color: #000;
+}
+
+.gate-check:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.gate.is-print .gate-check {
+  background: #ec4484;
+  border-color: #ec4484;
+}
+
+.gate.is-print .gate-check:hover {
+  background: #d63674;
+  border-color: #d63674;
 }
 
 .gate.is-print .gate-window {
@@ -154,14 +180,6 @@ html.gate-open body {
 
 .gate.is-work .gate-kicker {
   color: #666;
-}
-
-.gate.is-about .gate-bar {
-  background: #eef6c9;
-}
-
-.gate.is-about .gate-kicker {
-  color: #5a6b12;
 }
 
 @keyframes gate-out {

@@ -135,7 +135,7 @@ export default function App() {
           </>
         ) : page ? (
           <>
-            <PageIntro key={view} page={view === 'about' ? 'about' : 'work'} />
+            {view === 'work' && <PageIntro key="work" page="work" />}
             <div key={view} className="page">
               {page.map((frame, index) => (
                 <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
