@@ -3,20 +3,21 @@ import { useReducedMotion } from 'framer-motion'
 import { FrameScreen } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
+import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
 import { frames } from './frames'
-import { MENU, type MenuId } from './menu'
+import { MENU, type MenuId, type Page } from './menu'
 
-type View = 'tour' | 'work' | 'about'
+type View = 'tour' | Page
 
-const PAGES: Record<Exclude<View, 'tour'>, string[]> = {
+const PAGES: Record<Exclude<Page, 'print'>, string[]> = {
   about: ['02'],
   work: ['03', '04', '05', '06', '07', '08', '09'],
 }
 
 function viewFromHash(): View {
   const hash = window.location.hash.replace('#', '')
-  return hash === 'work' || hash === 'about' ? hash : 'tour'
+  return hash === 'work' || hash === 'about' || hash === 'print' ? hash : 'tour'
 }
 
 export default function App() {
@@ -88,7 +89,7 @@ export default function App() {
     (id: MenuId) => {
       setOpen(false)
       const target = MENU.find((entry) => entry.id === id)?.target
-      if (target !== 'work' && target !== 'about') return
+      if (!target) return
       if (view === 'tour') setStitches(sew())
       if (target !== view) {
         history.pushState(null, '', `#${target}`)
@@ -100,13 +101,15 @@ export default function App() {
 
   const closeMenu = useCallback(() => setOpen(false), [])
   const clearStitches = useCallback(() => setStitches(null), [])
-  const page = view === 'tour' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
+  const page = view === 'tour' || view === 'print' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
 
   return (
     <>
       {!ready && <Intro onDone={finishIntro} />}
       <main>
-        {page ? (
+        {view === 'print' ? (
+          <PrintPage key={view} onNavigate={go} />
+        ) : page ? (
           <div key={view} className="page">
             {page.map((frame, index) => (
               <FrameScreen key={frame.name} {...frame} eager={index === 0} />
