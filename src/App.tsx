@@ -3,7 +3,7 @@ import { useReducedMotion } from 'framer-motion'
 import { FrameScreen, usePhone } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
-import { PageIntro } from './components/PageIntro'
+import { BoardIntro } from './components/BoardIntro'
 import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
 import { WorkMobile } from './components/WorkMobile'
@@ -106,7 +106,6 @@ export default function App() {
   const goHome = useCallback(() => {
     setOpen(false)
     setStitches(null)
-    document.documentElement.classList.remove('gate-open')
     if (view !== 'tour') {
       history.pushState(null, '', `${window.location.pathname}${window.location.search}`)
       setView('tour')
@@ -125,20 +124,26 @@ export default function App() {
       <main>
         {view === 'print' ? (
           <>
-            <PageIntro key="print" page="print" />
+            <BoardIntro ready={ready} onHome={goHome} />
             <PrintPage key={view} onNavigate={go} />
           </>
         ) : view === 'work' && phone ? (
           <>
-            <PageIntro key="work" page="work" />
+            <BoardIntro ready={ready} onHome={goHome} />
             <WorkMobile />
           </>
-        ) : page ? (
+        ) : view === 'about' ? (
+          <div key={view} className="page">
+            {page?.map((frame, index) => (
+              <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
+            ))}
+          </div>
+        ) : view === 'work' ? (
           <>
-            {view === 'work' && <PageIntro key="work" page="work" />}
+            <BoardIntro ready={ready} onHome={goHome} />
             <div key={view} className="page">
-              {page.map((frame, index) => (
-                <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
+              {page?.map((frame, index) => (
+                <FrameScreen key={frame.name} {...frame} eager={index === 0} />
               ))}
             </div>
           </>
@@ -162,7 +167,6 @@ export default function App() {
           onToggle={() => setOpen((value) => !value)}
           onClose={closeMenu}
           onNavigate={go}
-          onHome={goHome}
           onStitchDone={clearStitches}
         />
       )}

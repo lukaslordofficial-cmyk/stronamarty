@@ -1,0 +1,92 @@
+.board {
+  --board-pad: max(24px, calc(100vw * 299 / 5036));
+  --board-art-h: calc(100svh - 2 * var(--board-pad));
+  --board-art-w: calc(var(--board-art-h) * 660 / 2692);
+  --board-gap: clamp(24px, 5.4vw, 88px);
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--board-art-w) minmax(0, 1fr);
+  gap: var(--board-gap);
+  min-height: 100svh;
+  padding: var(--board-pad);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.board-art {
+  width: var(--board-art-w);
+  height: var(--board-art-h);
+  background: var(--accent);
+  -webkit-mask: url(/board-art.png) center / contain no-repeat;
+  mask: url(/board-art.png) center / contain no-repeat;
+}
+
+.board-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: var(--board-art-h);
+}
+
+.board-logo {
+  width: clamp(72px, 6.5vw, 118px);
+}
+
+.board-copy {
+  max-width: 18.5em;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-bottom: 6vh;
+  font-size: clamp(22px, 2.55vw, 40px);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+}
+
+.board-copy p {
+  margin: 0;
+}
+
+.board-note {
+  margin-top: 1.15em !important;
+  font-size: 0.42em;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+.board-tri {
+  position: absolute;
+  right: 0;
+  top: 18%;
+  width: min(32vw, 420px);
+  height: auto;
+  overflow: visible;
+  fill: none;
+  stroke: #1f1f1f;
+  stroke-width: 2.4;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .board {
+    --board-pad: max(20px, 6vw);
+    --board-art-h: min(58svh, 520px);
+    --board-art-w: calc(var(--board-art-h) * 660 / 2692);
+    min-height: auto;
+  }
+
+  .board-copy {
+    margin-top: 28px;
+    margin-bottom: 12px;
+    padding-bottom: 0;
+    font-size: clamp(22px, 7vw, 32px);
+  }
+
+  .board-tri {
+    width: 48vw;
+    top: auto;
+    bottom: 8%;
+    opacity: 0.9;
+  }
+}
