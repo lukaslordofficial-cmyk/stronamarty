@@ -18,13 +18,9 @@ html.gate-open body {
   pointer-events: none;
 }
 
-.gate.is-print {
-  background: #fff4d6;
-  color: #3c1424;
-}
-
+.gate.is-print,
 .gate.is-work {
-  background: #f4f4f4;
+  background: #fff;
   color: #161616;
 }
 
@@ -101,6 +97,7 @@ html.gate-open body {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: #666;
 }
 
 .gate-title {
@@ -121,6 +118,7 @@ html.gate-open body {
 
 .gate-check {
   appearance: none;
+  align-self: center;
   margin-top: 12px;
   padding: 10px 22px;
   border: 1px solid #222;
@@ -148,38 +146,6 @@ html.gate-open body {
 .gate-check:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-.gate.is-print .gate-check {
-  background: #ec4484;
-  border-color: #ec4484;
-}
-
-.gate.is-print .gate-check:hover {
-  background: #d63674;
-  border-color: #d63674;
-}
-
-.gate.is-print .gate-window {
-  border: 1px solid rgba(236, 68, 132, 0.12);
-}
-
-.gate.is-print .gate-bar {
-  background: #fdf0f7;
-}
-
-.gate.is-print .gate-kicker {
-  color: #ec4484;
-}
-
-.gate.is-print .gate-title {
-  font-family: Fredoka, Inter, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.gate.is-work .gate-kicker {
-  color: #666;
 }
 
 @keyframes gate-out {
