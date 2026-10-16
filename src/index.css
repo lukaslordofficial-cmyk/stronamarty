@@ -221,19 +221,25 @@ main {
   position: absolute;
 }
 
-.home-logo {
+.home-slot {
   position: fixed;
-  top: max(16px, 2.4vw);
-  left: max(16px, 3vw);
+  inset: 0;
   z-index: 90;
-  width: clamp(68px, 5.2vw, 104px);
-  opacity: 0;
+  height: 100vh;
+  height: 100svh;
   pointer-events: none;
+  container-type: size;
+  opacity: 0;
+  visibility: hidden;
   transition: opacity 0.3s ease;
 }
 
-.home-logo.is-on {
+.home-slot.is-on {
   opacity: 1;
+  visibility: visible;
+}
+
+.home-slot .tour-logo {
   pointer-events: auto;
 }
 
@@ -353,7 +359,6 @@ main {
 
 .pill:focus-visible,
 .burger:focus-visible,
-.home-logo:focus-visible,
 .tour-logo:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -666,11 +671,6 @@ body.is-ready .pill-about {
     right: 16px;
   }
 
-  .home-logo {
-    top: 18px;
-    left: 16px;
-    width: 72px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -58,12 +58,11 @@ export function Menu({
 
   return (
     <>
-      <Logo
-        className={`home-logo ${docked ? 'is-on' : ''}`}
-        play={docked}
-        instant
-        onActivate={onHome}
-      />
+      <div className={`home-slot ${docked ? 'is-on' : ''}`} aria-hidden={docked ? undefined : true}>
+        <div className="tour-stage tour-content">
+          <Logo className="tour-logo" play={docked} instant onActivate={onHome} />
+        </div>
+      </div>
       <button
         ref={burgerRef}
         type="button"
