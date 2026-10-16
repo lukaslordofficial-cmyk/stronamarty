@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { FrameScreen } from './components/FrameScreen'
+import { FrameScreen, usePhone } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
 import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
+import { WorkMobile } from './components/WorkMobile'
 import { frames } from './frames'
 import { MENU, type MenuId, type Page } from './menu'
 
@@ -22,6 +23,7 @@ function viewFromHash(): View {
 
 export default function App() {
   const reduce = useReducedMotion()
+  const phone = usePhone()
   const [ready, setReady] = useState(false)
   const [view, setView] = useState<View>(viewFromHash)
   const [open, setOpen] = useState(false)
@@ -109,6 +111,8 @@ export default function App() {
       <main>
         {view === 'print' ? (
           <PrintPage key={view} onNavigate={go} />
+        ) : view === 'work' && phone ? (
+          <WorkMobile />
         ) : page ? (
           <div key={view} className="page">
             {page.map((frame, index) => (

@@ -573,7 +573,7 @@ body.is-ready .pill-about {
 
 /* Portrait phones: keep the composition, scale the type up to stay legible */
 
-@media (max-aspect-ratio: 4/5) {
+@media (max-width: 640px), (max-aspect-ratio: 4/5) and (max-width: 480px) {
   .tour-content {
     inset: 0;
     left: 0;

@@ -3,7 +3,7 @@ import { mobileSizes, type Crop, type Frame } from '../frames'
 import { Logo } from './Logo'
 import { PEN_AREA, PenNib } from './PenNib'
 
-const PHONE = '(max-aspect-ratio: 4/5)'
+const PHONE = '(max-width: 640px), (max-aspect-ratio: 4/5) and (max-width: 480px)'
 const LOGO_RATIO = 444 / 1002
 
 function subscribe(onChange: () => void) {
@@ -12,7 +12,7 @@ function subscribe(onChange: () => void) {
   return () => query.removeEventListener('change', onChange)
 }
 
-function usePhone() {
+export function usePhone() {
   return useSyncExternalStore(subscribe, () => window.matchMedia(PHONE).matches)
 }
 
@@ -50,7 +50,7 @@ export function FrameScreen(props: Frame & { eager?: boolean }) {
   )
 }
 
-function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop: Crop; index?: number }) {
+export function Tile({ frame, crop, index }: { frame: Frame & { eager?: boolean }; crop: Crop; index?: number }) {
   const { name, width, height, sizes, alt, logo, pen, accent, eager } = frame
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
