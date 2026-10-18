@@ -118,7 +118,7 @@ export default function App() {
   const about = frames.filter((frame) => PAGES.about.includes(frame.name))
   const page = view === 'tour' || view === 'print' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
   const intro = (key: string) => (
-    <div key={key} className="page">
+    <div key={key} className="page page-board">
       {about.map((frame, index) => (
         <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
       ))}
@@ -140,7 +140,7 @@ export default function App() {
             <WorkMobile />
           </>
         ) : view === 'about' ? (
-          <div key={view} className="page">
+          <div key={view} className="page page-board">
             {page?.map((frame, index) => (
               <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
             ))}

@@ -202,6 +202,16 @@ main {
   animation: page-in 0.7s var(--ease-out) both;
 }
 
+.page-board .frame {
+  padding-left: clamp(36px, 3.6vw, 72px);
+}
+
+@media (max-width: 640px) {
+  .page-board .frame {
+    padding-left: 0;
+  }
+}
+
 @keyframes page-in {
   from {
     opacity: 0;
