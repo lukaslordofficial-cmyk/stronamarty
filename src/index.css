@@ -202,13 +202,37 @@ main {
   animation: page-in 0.7s var(--ease-out) both;
 }
 
-.page-board .frame {
-  padding-left: clamp(36px, 3.6vw, 72px);
+.page-board {
+  position: relative;
+}
+
+.page-board .frame,
+.page-board .frame-tile {
+  overflow: visible;
+}
+
+.board-art-safe {
+  position: absolute;
+  z-index: 2;
+  left: max(64px, 6vw);
+  top: 0;
+  height: 100%;
+  width: calc(100% * 700 / 5108);
+  background: var(--accent);
+  -webkit-mask: url(/screens/02-accent.png) center / contain no-repeat;
+  mask: url(/screens/02-accent.png) center / contain no-repeat;
+  pointer-events: none;
+}
+
+@media (min-width: 641px) {
+  .page-board .frame-accent {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .page-board .frame {
-    padding-left: 0;
+  .board-art-safe {
+    display: none;
   }
 }
 
@@ -229,6 +253,7 @@ main {
 
 .frame-logo {
   position: absolute;
+  z-index: 3;
 }
 
 .home-slot {

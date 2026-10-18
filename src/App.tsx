@@ -119,6 +119,7 @@ export default function App() {
   const page = view === 'tour' || view === 'print' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
   const intro = (key: string) => (
     <div key={key} className="page page-board">
+      <div className="board-art-safe" aria-hidden="true" />
       {about.map((frame, index) => (
         <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
       ))}
@@ -141,6 +142,7 @@ export default function App() {
           </>
         ) : view === 'about' ? (
           <div key={view} className="page page-board">
+            <div className="board-art-safe" aria-hidden="true" />
             {page?.map((frame, index) => (
               <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
             ))}
