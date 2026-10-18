@@ -13,7 +13,7 @@ export function BoardIntro({ ready = true, onHome }: Props) {
       <div className="board-main">
         <Logo className="board-logo" play={ready} delay={0.15} onActivate={onHome} />
         <div className="board-copy">
-          <p className="board-lead">
+          <p>
             Hi I’m Marta Bensalem
             <br />
             UX/UI Designer. I create experiences that are impactful and perhaps, even a bit delightful.

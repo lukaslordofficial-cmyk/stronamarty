@@ -133,7 +133,11 @@ export default function App() {
             <WorkMobile />
           </>
         ) : view === 'about' ? (
-          <BoardIntro ready={ready} onHome={goHome} />
+          <div key={view} className="page">
+            {page?.map((frame, index) => (
+              <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
+            ))}
+          </div>
         ) : view === 'work' ? (
           <>
             <BoardIntro ready={ready} onHome={goHome} />
