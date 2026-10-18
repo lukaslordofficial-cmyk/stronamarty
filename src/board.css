@@ -1,3 +1,17 @@
+@font-face {
+  font-family: "SF Pro Display";
+  src: local("SF Pro Display Regular"), local("SFProDisplay-Regular"), local(".SF NS");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: local("SF Pro Display Bold"), local("SFProDisplay-Bold"), local(".SF NS");
+  font-weight: 700;
+  font-style: normal;
+}
+
 .board {
   --board-pad: max(24px, calc(100vw * 299 / 5036));
   --board-art-h: calc(100svh - 2 * var(--board-pad));
@@ -33,26 +47,32 @@
 }
 
 .board-copy {
-  max-width: 18.5em;
+  --sf: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  max-width: 680px;
   margin-top: auto;
   margin-bottom: auto;
   padding-bottom: 6vh;
-  font-size: clamp(22px, 2.55vw, 40px);
-  font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.03em;
 }
 
 .board-copy p {
   margin: 0;
 }
 
+.board-lead {
+  font-family: var(--sf);
+  font-size: 62px;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+}
+
 .board-note {
-  margin-top: 1.15em !important;
-  font-size: 0.42em;
+  margin-top: 28px !important;
+  font-family: var(--sf);
+  font-size: 32px;
   font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: -0.01em;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
 }
 
 .board-tri {
@@ -80,7 +100,15 @@
     margin-top: 28px;
     margin-bottom: 12px;
     padding-bottom: 0;
-    font-size: clamp(22px, 7vw, 32px);
+  }
+
+  .board-lead {
+    font-size: 32px;
+  }
+
+  .board-note {
+    margin-top: 16px !important;
+    font-size: 18px;
   }
 
   .board-tri {
