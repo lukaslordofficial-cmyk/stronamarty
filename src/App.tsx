@@ -3,7 +3,6 @@ import { useReducedMotion } from 'framer-motion'
 import { FrameScreen, usePhone } from './components/FrameScreen'
 import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
-import { BoardIntro } from './components/BoardIntro'
 import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
 import { WorkMobile } from './components/WorkMobile'
@@ -116,7 +115,15 @@ export default function App() {
 
   const closeMenu = useCallback(() => setOpen(false), [])
   const clearStitches = useCallback(() => setStitches(null), [])
+  const about = frames.filter((frame) => PAGES.about.includes(frame.name))
   const page = view === 'tour' || view === 'print' ? null : frames.filter((frame) => PAGES[view].includes(frame.name))
+  const intro = (key: string) => (
+    <div key={key} className="page">
+      {about.map((frame, index) => (
+        <FrameScreen key={frame.name} {...frame} eager={index === 0} onHome={goHome} />
+      ))}
+    </div>
+  )
 
   return (
     <>
@@ -124,12 +131,12 @@ export default function App() {
       <main>
         {view === 'print' ? (
           <>
-            <BoardIntro ready={ready} onHome={goHome} />
+            {intro('print-intro')}
             <PrintPage key={view} onNavigate={go} />
           </>
         ) : view === 'work' && phone ? (
           <>
-            <BoardIntro ready={ready} onHome={goHome} />
+            {intro('work-intro')}
             <WorkMobile />
           </>
         ) : view === 'about' ? (
@@ -140,7 +147,7 @@ export default function App() {
           </div>
         ) : view === 'work' ? (
           <>
-            <BoardIntro ready={ready} onHome={goHome} />
+            {intro('work-intro')}
             <div key={view} className="page">
               {page?.map((frame, index) => (
                 <FrameScreen key={frame.name} {...frame} eager={index === 0} />
