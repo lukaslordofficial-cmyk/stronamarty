@@ -5,7 +5,6 @@ import { Intro } from './components/Intro'
 import { Menu, type Stitch } from './components/Menu'
 import { PrintPage } from './components/PrintPage'
 import { TourScreen } from './components/TourScreen'
-import { WORK_TAIL, WorkHero, WorkPhones } from './components/WorkHero'
 import { WorkMobile } from './components/WorkMobile'
 import { frames } from './frames'
 import { MENU, type MenuId, type Page } from './menu'
@@ -152,15 +151,14 @@ export default function App() {
             ))}
           </div>
         ) : view === 'work' ? (
-          <div key={view} className="page">
-            <WorkHero ready={ready} onHome={goHome} />
-            <WorkPhones />
-            {frames
-              .filter((frame) => WORK_TAIL.includes(frame.name))
-              .map((frame, index) => (
+          <>
+            {intro('work-intro')}
+            <div key={view} className="page">
+              {page?.map((frame, index) => (
                 <FrameScreen key={frame.name} {...frame} eager={index === 0} />
               ))}
-          </div>
+            </div>
+          </>
         ) : (
           <TourScreen
             key={loop}
