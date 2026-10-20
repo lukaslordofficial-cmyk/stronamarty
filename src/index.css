@@ -204,6 +204,10 @@ main {
 
 .page-board {
   position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  animation: none;
 }
 
 .page-board .frame,
@@ -215,12 +219,13 @@ main {
   position: absolute;
   z-index: 2;
   left: max(64px, 6vw);
-  top: 0;
-  height: 100%;
-  width: calc(100% * 700 / 5108);
+  top: 12px;
+  height: calc(100% - 24px);
+  aspect-ratio: 700 / 2772;
+  width: auto;
   background: var(--accent);
-  -webkit-mask: url(/screens/02-accent.png) center / contain no-repeat;
-  mask: url(/screens/02-accent.png) center / contain no-repeat;
+  -webkit-mask: url(/screens/02-the-art.png) center / 100% 100% no-repeat;
+  mask: url(/screens/02-the-art.png) center / 100% 100% no-repeat;
   pointer-events: none;
 }
 
@@ -231,6 +236,12 @@ main {
 }
 
 @media (max-width: 640px) {
+  .page-board {
+    height: auto;
+    overflow: visible;
+    animation: page-in 0.7s var(--ease-out) both;
+  }
+
   .board-art-safe {
     display: none;
   }
