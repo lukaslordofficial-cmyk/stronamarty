@@ -1,16 +1,16 @@
 .work-hero {
-  --art: clamp(88px, 12.4vw, 180px);
+  --art: clamp(78px, 12vw, 176px);
   position: relative;
   display: grid;
-  grid-template-columns: var(--art) minmax(0, 1.2fr) minmax(34%, 42%);
-  grid-template-rows: auto auto minmax(48px, 1fr) auto;
+  grid-template-columns: var(--art) minmax(0, 1.08fr) minmax(34%, 44%);
+  grid-template-rows: auto auto minmax(80px, 1fr) auto;
   grid-template-areas:
     "art head ."
     "art about mock"
     "art ux mock"
     ". cards mock";
-  column-gap: clamp(16px, 2.4vw, 44px);
-  padding: clamp(14px, 1.7vw, 28px) clamp(18px, 3.4vw, 56px) 0 clamp(10px, 1.5vw, 28px);
+  column-gap: clamp(10px, 1.8vw, 36px);
+  padding: clamp(14px, 1.8vw, 28px) clamp(16px, 3.2vw, 52px) 0 clamp(8px, 1.4vw, 26px);
   background: var(--paper);
   align-items: start;
 }
@@ -30,7 +30,7 @@
   display: flex;
   align-items: flex-start;
   padding-top: 2px;
-  padding-bottom: clamp(12px, 2.4vw, 36px);
+  padding-bottom: clamp(18px, 3.2vw, 48px);
 }
 
 .work-hero-logo {
@@ -39,22 +39,22 @@
 
 .work-hero-about {
   grid-area: about;
-  max-width: 18.6em;
-  padding: 0;
-  font-size: clamp(22px, 2.7vw, 44px);
-  font-weight: 800;
-  line-height: 1.14;
-  letter-spacing: -0.03em;
+  max-width: 19.2em;
+  padding: 0 0 1vw;
   z-index: 3;
 }
 
 .work-hero-hello {
   margin: 0;
+  font-size: clamp(24px, 3.05vw, 50px);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.03em;
 }
 
 .work-hero-note {
   margin: 1.05em 0 0;
-  font-size: 0.34em;
+  font-size: clamp(13px, 1.02vw, 17px);
   font-weight: 400;
   line-height: 1.45;
   letter-spacing: -0.01em;
@@ -63,8 +63,8 @@
 .work-hero-tri {
   position: absolute;
   right: 0;
-  top: 3%;
-  width: min(28vw, 380px);
+  top: 4%;
+  width: min(30vw, 400px);
   height: auto;
   overflow: visible;
   fill: none;
@@ -77,15 +77,15 @@
 .work-hero-ux {
   grid-area: ux;
   min-width: 0;
-  width: 92%;
+  width: min(100%, 22.5em);
   align-self: end;
-  padding: clamp(8px, 1.2vw, 20px) 0 clamp(10px, 1.4vw, 24px);
+  padding-bottom: clamp(12px, 1.6vw, 28px);
 }
 
 .work-hero-cards {
   grid-area: cards;
   min-width: 0;
-  padding: 0 0 clamp(10px, 1.6vw, 28px);
+  padding: 0 0 clamp(12px, 2vw, 32px);
 }
 
 .work-hero-mock {
