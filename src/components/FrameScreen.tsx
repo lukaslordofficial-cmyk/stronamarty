@@ -100,10 +100,18 @@ export function Tile({
         decoding="async"
       />
       {accent && desktop && (
-        <div className="frame-accent" style={accentStyle(`/screens/${name}-accent.png`, accent, crop)} />
+        <div
+          className="frame-accent"
+          style={accentStyle(name === '02' ? '/screens/02-the-art.png' : `/screens/${name}-accent.png`, accent, crop)}
+        />
       )}
       {accent && !desktop && overlaps(crop, accent) && (
-        <div className="frame-accent" style={accentStyle(`/screens/m${name}-${index}-accent.png`)} />
+        <div
+          className="frame-accent"
+          style={accentStyle(
+            name === '02' ? `/screens/m${name}-${index}-the-art.png` : `/screens/m${name}-${index}-accent.png`,
+          )}
+        />
       )}
       {showLogo && logo && (
         <Logo
