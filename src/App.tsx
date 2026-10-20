@@ -46,8 +46,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    window.scrollTo(0, 0)
     document.documentElement.classList.toggle('is-tour', view === 'tour')
+    const toTop = () => window.scrollTo(0, 0)
+    toTop()
+    const frame = requestAnimationFrame(toTop)
+    return () => cancelAnimationFrame(frame)
   }, [view])
 
   useEffect(() => {

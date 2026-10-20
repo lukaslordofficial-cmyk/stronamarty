@@ -38,7 +38,6 @@ const designed: Frame[] = [
     accent: { x: 280, y: 0, w: 700, h: 2772 },
   },
   {
-    id: 'work',
     name: '03',
     width: 5036,
     height: 2673,
