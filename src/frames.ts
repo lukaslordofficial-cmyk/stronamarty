@@ -34,7 +34,7 @@ const designed: Frame[] = [
     height: 2772,
     sizes: FULL,
     alt: 'Hi I’m Marta Bensalem, UX/UI Designer. I create experiences that are impactful and perhaps, even a bit delightful.',
-    logo: { left: 1182, top: 151, width: 334 },
+    logo: { left: 1182, top: 151, width: 267.2 },
     accent: { x: 280, y: 0, w: 700, h: 2772 },
   },
   {

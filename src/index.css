@@ -191,7 +191,7 @@ main {
   position: absolute;
   left: 24.43cqw;
   top: 3.805cqw;
-  width: 6.4cqw;
+  width: 5.12cqw;
 }
 
 .frame {
@@ -664,7 +664,7 @@ body.is-ready .pill-about {
   .tour-logo {
     left: 50%;
     top: max(28px, 7svh);
-    width: 26cqw;
+    width: 20.8cqw;
     translate: -50% 0;
   }
 
