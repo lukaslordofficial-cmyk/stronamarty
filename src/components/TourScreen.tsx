@@ -29,7 +29,7 @@ export const TourScreen = forwardRef<HTMLElement, Props>(function TourScreen(
           <svg className="tour-blob" viewBox="0 0 373 355" aria-hidden="true">
             <path d="M128 1C232-6 373 84 373 182c0 104-104 173-196 173C81 355 0 279 0 172 0 70 38 7 128 1Z" />
           </svg>
-          <span className="tour-title-text">Take a tour</span>
+          <span className="tour-title-text">Take a tour.</span>
         </h1>
 
         <nav className={concealNav ? 'tour-nav is-concealed' : 'tour-nav'} aria-label="Primary">
